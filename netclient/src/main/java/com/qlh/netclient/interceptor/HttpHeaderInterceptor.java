@@ -10,6 +10,8 @@ import java.io.IOException;
  * Created by QLH on 2018/3/21.
  *
  * 配置会请求头数据，比如token等数据
+ *
+ * 可以配合使用
  */
 
 public class HttpHeaderInterceptor implements Interceptor {

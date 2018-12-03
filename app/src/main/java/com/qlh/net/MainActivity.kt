@@ -8,6 +8,7 @@ import com.qlh.netclient.http.NetClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onNext(t:String) {
                     Logs.d("11111111111",t)
+                    tv.text = t
                 }
             })
 

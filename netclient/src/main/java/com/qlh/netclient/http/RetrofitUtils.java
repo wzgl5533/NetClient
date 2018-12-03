@@ -4,6 +4,8 @@ import android.os.Environment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.qlh.netclient.converter.MyGsonConverterFactory;
+import com.qlh.netclient.interceptor.CacheNetworkInterceptor;
+import com.qlh.netclient.interceptor.CacheInterceptor;
 import com.qlh.netclient.interceptor.HttpHeaderInterceptor;
 import com.qlh.netclient.interceptor.LoggingInterceptor;
 import okhttp3.Cache;
@@ -28,7 +30,6 @@ class RetrofitUtils {
 
     private static OkHttpClient.Builder getOkHttpClientBuilder() {
 
-
         File cacheFile = new File(Environment.getExternalStorageDirectory(), "httpCache");
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 100);//100M
 
@@ -36,8 +37,12 @@ class RetrofitUtils {
                 .readTimeout(DEFAULT_READ_TIME_OUT, TimeUnit.SECONDS)
                 .connectTimeout(DEFAULT_TIME_OUT, TimeUnit.SECONDS)
                 .writeTimeout(DEFAULT_WRITE_TIME_OUT, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
                 .addInterceptor(new LoggingInterceptor())
-                .addInterceptor(new HttpHeaderInterceptor())
+                //加入拦截器,注意Network与非Network的区别,目前不知道怎么测试
+                //.addInterceptor(new HttpHeaderInterceptor())
+                .addInterceptor(new CacheInterceptor())
+                .addNetworkInterceptor(new CacheNetworkInterceptor())
                 .cache(cache);
     }
 
