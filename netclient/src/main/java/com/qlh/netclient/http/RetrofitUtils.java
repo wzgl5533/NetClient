@@ -30,7 +30,12 @@ class RetrofitUtils {
 
     private static OkHttpClient.Builder getOkHttpClientBuilder() {
 
+        //需要权限
+        //OkHttp的缓存只能用于Get请求。OkHttp的Cache类中，对于GET以外的请求，
+        // 都返回null。源码中也做出了解释：不允许Get以外的请求，
+        // 从技术上是允许post请求的。但是他的复杂度很高，实用性太低
         File cacheFile = new File(Environment.getExternalStorageDirectory(), "httpCache");
+        if (!cacheFile.exists()){cacheFile.mkdirs();}
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 100);//100M
 
         return new OkHttpClient.Builder()

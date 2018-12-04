@@ -30,22 +30,21 @@ public class CacheInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         if (!NetworkUtils.isConnected()) {  //无网络,检查30天内的缓存,即使是过期的缓存
-            request = request.newBuilder()
+            Request newRequest = request.newBuilder()
                     .cacheControl(new CacheControl.Builder()
                             .onlyIfCached()
                             .maxStale(30, TimeUnit.DAYS)
                             .build())
                     .build();
             Logs.d("OkHttp----", "no network");
+            return chain.proceed(newRequest);
         } else {  //有网络,检查10秒内的缓存
-            request = chain.request().newBuilder()
+           Request newRequest = request.newBuilder()
                     .cacheControl(new CacheControl.Builder()
                             .maxAge(10, TimeUnit.SECONDS)
                             .build())
                     .build();
+            return chain.proceed(newRequest);
         }
-
-        Response originalResponse = chain.proceed(request);
-        return originalResponse.newBuilder().build();
     }
 }
