@@ -1,60 +1,28 @@
 package com.qlh.net
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.qlh.netclient.utils.Logs
+import androidx.appcompat.app.AppCompatActivity
 import com.qlh.netclient.http.MyObserver
 import com.qlh.netclient.http.NetClient
+import com.qlh.netclient.utils.Logs
+import com.qlh.netclient.utils.ProgressUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        NetClient.getRetrofit(QLHUrls.BASE_URL,true).create(IService::class.java).httpRoot
+
+        NetClient.getRetrofit(QLHUrls.BASE_URL, true).create(IService::class.java).httpRoot
+            .compose(ProgressUtils.applyProgressBar(this,"正在加载..."))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object :DisposableObserver<String>(){
-                override fun onComplete() {
-
-                }
-
-                override fun onError(e: Throwable) {
-                }
-
-                override fun onNext(t:String) {
-                    Logs.d("11111111111",t)
-                    tv.text = t
-                }
-            })
-
-        NetClient.getRetrofit(QLHUrls.BASE_URL,true).create(IService::class.java).httpRoot
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : MyObserver<String>(){
+            .subscribe(object : MyObserver<String>() {
 
                 override fun onSuccess(response: String) {
-                    Logs.d("11111111111",response)
-                }
-            })
-
-        NetClient.getRetrofit(QLHUrls.BASE_URL).create(IService::class.java).httpRoot1
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object :DisposableObserver<BaseBean<String>>(){
-                override fun onComplete() {
-
-                }
-
-                override fun onError(e: Throwable) {
-                }
-
-                override fun onNext(t:BaseBean<String>) {
-                    Logs.d("11111111111",t.errorResponse)
+                    Logs.d("11111111111", response)
                 }
             })
     }
