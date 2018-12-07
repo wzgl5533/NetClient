@@ -24,7 +24,15 @@ class MainActivity : AppCompatActivity() {
                 override fun onSuccess(response: String) {
                     Logs.d("11111111111", response)
                 }
+
+                override fun onError(e: Throwable) {
+                    super.onError(e)
+                    Logs.d("11111",e.message)
+                    //主要用于Toast提示字段
+                    Logs.d("11111",e.cause?.message.let { e.cause?.message }?:"kong")
+                }
             })
+
     }
 
 }

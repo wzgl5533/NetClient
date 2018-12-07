@@ -27,6 +27,8 @@ import java.io.IOException;
 
 /**
  * 这个是response结果的转换，提取数据部分
+ *
+ * 根据情况替换BaseBean
  * **/
 
 final class GsonResponseBodyConverter<T> implements Converter<ResponseBody, Object> {
