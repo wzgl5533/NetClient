@@ -1,5 +1,6 @@
 package com.qlh.netclient.interceptor;
 
+import com.qlh.netclient.BuildConfig;
 import com.qlh.netclient.utils.Logs;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -16,6 +17,7 @@ import java.io.IOException;
 public class LoggingInterceptor implements Interceptor {
 
     private static final String TAG = "OKHttp----";
+    public static Boolean isDebug = null;
     @Override
     public Response intercept(Interceptor.Chain chain) throws IOException {
         //这个chain里面包含了request和response，所以你要什么都可以从这里拿
@@ -23,8 +25,16 @@ public class LoggingInterceptor implements Interceptor {
 
         long t1 = System.nanoTime();//请求发起的时间
 
-        Logs.e(TAG,String.format("请求URL------%s on %s%n请求头------%s",
-                request.url(), chain.connection(), request.headers()));
+        if (isDebug == null){
+            if (BuildConfig.DEBUG)
+                Logs.e(TAG,String.format("请求URL------%s on %s%n请求头------%s",
+                        request.url(), chain.connection(), request.headers()));
+        }else {
+            if (isDebug)
+                Logs.e(TAG,String.format("请求URL------%s on %s%n请求头------%s",
+                        request.url(), chain.connection(), request.headers()));
+        }
+
         Response response = chain.proceed(request);
 
         long t2 = System.nanoTime();//收到响应的时间
@@ -34,11 +44,21 @@ public class LoggingInterceptor implements Interceptor {
         //个新的response给应用层处理
         ResponseBody responseBody = response.peekBody(1024 * 1024);
 
-        Logs.e(TAG,String.format("响应URL-------: %s %n响应数据------%s 请求用时--------%.1fms%n%s",
-                response.request().url(),
-                responseBody.string(),
-                (t2 - t1) / 1e6d,
-                response.headers()));
+        if (isDebug == null){
+            if (BuildConfig.DEBUG)
+                Logs.e(TAG,String.format("响应URL-------: %s %n响应数据------%s 请求用时--------%.1fms%n%s",
+                        response.request().url(),
+                        responseBody.string(),
+                        (t2 - t1) / 1e6d,
+                        response.headers()));
+        }else {
+            if (isDebug)
+                Logs.e(TAG,String.format("响应URL-------: %s %n响应数据------%s 请求用时--------%.1fms%n%s",
+                        response.request().url(),
+                        responseBody.string(),
+                        (t2 - t1) / 1e6d,
+                        response.headers()));
+        }
 
         return response;
     }

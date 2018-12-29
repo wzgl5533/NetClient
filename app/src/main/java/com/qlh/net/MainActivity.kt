@@ -15,21 +15,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        NetClient.getRetrofit(QLHUrls.BASE_URL, true).create(IService::class.java).httpRoot
-            .compose(ProgressUtils.applyProgressBar(this,"正在加载..."))
+//        NetClient.getRetrofit(QLHUrls.BASE_URL, true).create(IService::class.java).httpRoot
+//            .compose(ProgressUtils.applyProgressBar(this,"正在加载..."))
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(object : MyObserver<String>() {
+//
+//                override fun onSuccess(response: String) {
+//                    Logs.d("11111111111", response)
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                    super.onError(e)
+//                    Logs.d("11111",e.message)
+//                    //主要用于Toast提示字段
+//                    Logs.d("11111",e.cause?.message.let { e.cause?.message }?:"kong")
+//                }
+//            })
+
+        //测试
+        NetClient.getRetrofit("http://www.wanandroid.com/").create(IService::class.java).getList("420","1")
+            .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : MyObserver<String>() {
-
-                override fun onSuccess(response: String) {
-                    Logs.d("11111111111", response)
-                }
-
-                override fun onError(e: Throwable) {
-                    super.onError(e)
-                    Logs.d("11111",e.message)
-                    //主要用于Toast提示字段
-                    Logs.d("11111",e.cause?.message.let { e.cause?.message }?:"kong")
+            .subscribe(object :MyObserver<Any>(){
+                override fun onSuccess(response: Any) {
+                    Logs.d("11111111111", response.toString())
                 }
             })
 
