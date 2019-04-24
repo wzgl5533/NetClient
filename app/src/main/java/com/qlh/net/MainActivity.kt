@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        NetClient.getRetrofit(QLHUrls.BASE_URL, true).create(IService::class.java).httpRoot
+ //      NetClient.getRetrofit(QLHUrls.BASE_URL, true).create(IService::class.java).httpRoot
 //            .compose(ProgressUtils.applyProgressBar(this,"正在加载..."))
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
@@ -34,15 +34,17 @@ class MainActivity : AppCompatActivity() {
 //            })
 
         //测试
-        NetClient.getRetrofit("http://www.wanandroid.com/").create(IService::class.java).getList("420","1")
-            .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object :MyObserver<Any>(){
-                override fun onSuccess(response: Any) {
-                    Logs.d("11111111111", response.toString())
-                }
-            })
+        NetClient.getRetrofit()?.let {
+            it.create(IService::class.java).getList("420","1")
+                .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object :MyObserver<Any>(){
+                    override fun onSuccess(response: Any) {
+                        Logs.d("11111111111", response.toString())
+                    }
+                })
+        }
 
     }
 

@@ -2,6 +2,7 @@ package com.qlh.netclient.http
 
 import android.content.Context
 import com.qlh.netclient.interceptor.LoggingInterceptor
+import com.qlh.netclient.utils.Logs
 import com.qlh.netclient.utils.Utils
 import retrofit2.Retrofit
 
@@ -21,20 +22,39 @@ object NetClient {
      * @param baseUrl                  基础地址
      * @param isDefineConverterFactory 是否需要自定义转换器
      **/
-    fun getRetrofit(baseUrl: String,isDefineConverterFactory:Boolean = false): Retrofit {
+    fun getRetrofit(baseUrl: String, isDefineConverterFactory: Boolean = false): Retrofit {
 
         return RetrofitUtils.getRetrofitBuilder(baseUrl, isDefineConverterFactory).build()
     }
 
+    /**application中初始化定义baseUrl**/
+    fun getRetrofit(isDefineConverterFactory: Boolean = false): Retrofit? {
+
+        return if (RetrofitUtils.isSetBaseUrl()) {
+            RetrofitUtils.getRetrofitBuilder(isDefineConverterFactory).build()
+        } else {
+            Logs.e(NetClient.javaClass.simpleName,"需要设置基础地址")
+            null
+        }
+    }
+
     /**初始化**/
-    fun init(context: Context):NetClient{
+    @JvmStatic
+    fun init(context: Context): NetClient {
         Utils.init(context)
         return this
     }
 
     /**设置Log开关**/
-    fun logToggle(isDebug: Boolean):NetClient{
+    @JvmStatic
+    fun logToggle(isDebug: Boolean): NetClient {
         LoggingInterceptor.isDebug = isDebug
         return this
+    }
+
+    /**设置BaseUrl**/
+    @JvmStatic
+    fun setBaseUrl(baseUrl: String) {
+        RetrofitUtils.setBaseUrl(baseUrl)
     }
 }

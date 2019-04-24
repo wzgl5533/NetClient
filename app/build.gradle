@@ -31,4 +31,5 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1-alpha01'
     implementation project(':netclient')
+    // implementation 'com.github.wzgl5533:NetClient:1.3'
 }
