@@ -2,13 +2,11 @@ package com.qlh.net
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.qlh.netclient.http.MyObserver
+import com.qlh.netclient.http.NetworkObserver
 import com.qlh.netclient.http.NetClient
 import com.qlh.netclient.utils.Logs
 import com.qlh.netclient.utils.ProgressUtils
 import com.qlh.netclient.utils.switch
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 //            .compose(ProgressUtils.applyProgressBar(this,"正在加载..."))
 //            .subscribeOn(Schedulers.io())
 //            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(object : MyObserver<String>() {
+//            .subscribe(object : NetworkObserver<String>() {
 //
 //                override fun onSuccess(response: String) {
 //                    Logs.d("11111111111", response)
@@ -39,10 +37,11 @@ class MainActivity : AppCompatActivity() {
             it.create(IService::class.java).getList("420","1")
                 .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
                 .switch()
-                .subscribe(object :MyObserver<Any>(){
-                    override fun onSuccess(response: Any) {
-                        Logs.d("11111111111", response.toString())
+                .subscribe(object :NetworkObserver<Any>(){
+                    override fun onSuccess(t: Any?) {
+
                     }
+
                 })
         }
 

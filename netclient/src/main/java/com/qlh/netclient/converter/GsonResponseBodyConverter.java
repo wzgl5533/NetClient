@@ -44,7 +44,7 @@ final class GsonResponseBodyConverter<T> implements Converter<ResponseBody, Obje
         try {
             BaseBean response = (BaseBean) adapter.fromJson(value.charStream());
             if (!response.isOk()) {//访问不成功
-                // 特定 API 的错误，在相应的 MyObserver 的 onError 的方法中进行处理
+                // 特定 API 的错误，在相应的 NetworkObserver 的 onError 的方法中进行处理
                 throw new ServerResponseException(response.getCode(), response.getErrorResponse());
             } else if (response.isOk()) {//访问成功
                 if(response.getValue()!=null)//这个需要根据实际的情况，有的有可能就是空，但尽量避免，以免引起歧义

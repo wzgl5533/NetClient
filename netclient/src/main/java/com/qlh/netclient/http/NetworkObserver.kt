@@ -21,7 +21,9 @@ import java.text.ParseException
  *
  * T 解析的数据model
  */
-abstract class MyObserver<T> : Observer<T> {
+open abstract class NetworkObserver<T> : Observer<T> {
+
+    var t : T? = null
 
     companion object {
 
@@ -32,10 +34,8 @@ abstract class MyObserver<T> : Observer<T> {
 
     }
 
-    override fun onNext(response: T) {
-
-        onSuccess(response)
-        onFinish()
+    override fun onNext(t: T) {
+        this.t = t
     }
 
     override fun onError(e: Throwable) {
@@ -57,15 +57,15 @@ abstract class MyObserver<T> : Observer<T> {
     }
 
     override fun onComplete() {
-
+        onSuccess(t)
     }
 
     /**
      * 请求成功
      *
-     * @param response 服务器返回的数据
+     * @param t 服务器返回的数据
      */
-   abstract fun onSuccess(response: T)
+   abstract fun onSuccess(t: T?)
 
     /**
      * 服务器返回数据，但响应码不为200
