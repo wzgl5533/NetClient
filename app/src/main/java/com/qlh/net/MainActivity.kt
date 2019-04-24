@@ -6,6 +6,7 @@ import com.qlh.netclient.http.MyObserver
 import com.qlh.netclient.http.NetClient
 import com.qlh.netclient.utils.Logs
 import com.qlh.netclient.utils.ProgressUtils
+import com.qlh.netclient.utils.switch
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -37,8 +38,7 @@ class MainActivity : AppCompatActivity() {
         NetClient.getRetrofit()?.let {
             it.create(IService::class.java).getList("420","1")
                 .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .switch()
                 .subscribe(object :MyObserver<Any>(){
                     override fun onSuccess(response: Any) {
                         Logs.d("11111111111", response.toString())
