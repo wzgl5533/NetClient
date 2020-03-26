@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class LoggingInterceptor implements Interceptor {
 
-    private static final String TAG = "OKHttp----";
+    private static final String TAG = "OKHtt";
     public static Boolean isDebug = true;
     @Override
     public Response intercept(Interceptor.Chain chain) throws IOException {
@@ -26,8 +26,8 @@ public class LoggingInterceptor implements Interceptor {
         long t1 = System.nanoTime();//请求发起的时间
 
         if (isDebug){
-                Logs.e(TAG,String.format("请求URL------%s on %s%n请求头------%s",
-                        request.url(), chain.connection(), request.headers()));
+                Logs.e(TAG,String.format("请求URL：%s%n 参数：%s%n on %s%n 请求头：%s",
+                        request.url(), request.body().toString(),chain.connection(), request.headers()));
         }
 
         Response response = chain.proceed(request);
@@ -40,7 +40,7 @@ public class LoggingInterceptor implements Interceptor {
         ResponseBody responseBody = response.peekBody(1024 * 1024);
 
         if (isDebug){
-                Logs.e(TAG,String.format("响应URL-------: %s %n响应数据------%s 请求用时--------%.1fms%n%s",
+                Logs.e(TAG,String.format("响应URL: %s %n响应数据：%s %n请求用时：%.1fms%n%s",
                         response.request().url(),
                         responseBody.string(),
                         (t2 - t1) / 1e6d,
