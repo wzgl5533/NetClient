@@ -13,6 +13,6 @@ class App : Application() {
         super.onCreate()
         NetClient.init(this)
             .logToggle(true)
-            .setBaseUrl("http://www.wanandroid.com/")
+            .setBaseUrl("https://www.wanandroid.com/")
     }
 }
