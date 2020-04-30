@@ -28,8 +28,8 @@ internal object RetrofitUtils {
 
     private var baseUrl: String = ""
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create()
-    private val okHttpClient = getOkHttpClientBuilder().build()
-
+    private val okHttpClient = getOkHttpClientBuilder()
+    private val interceptor = LoggingInterceptor()
 
     private fun getOkHttpClientBuilder(): OkHttpClient.Builder {
         //需要权限
@@ -47,7 +47,7 @@ internal object RetrofitUtils {
             .connectTimeout(DEFAULT_TIME_OUT, TimeUnit.SECONDS)
             .writeTimeout(DEFAULT_WRITE_TIME_OUT, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
-            .addInterceptor(LoggingInterceptor())
+            //.addInterceptor(LoggingInterceptor())
             //加入拦截器,注意Network与非Network的区别,目前不知道怎么测试
             //.addInterceptor(new HttpHeaderInterceptor())
             .addInterceptor(CacheInterceptor())
@@ -60,7 +60,7 @@ internal object RetrofitUtils {
      */
     private fun getRetrofitBuilder(baseUrl: String): Retrofit.Builder {
         return Retrofit.Builder()
-            .client(okHttpClient)
+            .client(okHttpClient.build())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .baseUrl(baseUrl)
@@ -78,9 +78,10 @@ internal object RetrofitUtils {
      */
     fun getRetrofitBuilder(baseUrl: String, isDefineConverterFactory: Boolean): Retrofit.Builder {
         setBaseUrl(baseUrl)
+        okHttpClient.addInterceptor(interceptor)
         return if (isDefineConverterFactory)
             Retrofit.Builder()
-                .client(okHttpClient)
+                .client(okHttpClient.build())
                 .addConverterFactory(MyGsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(baseUrl)
@@ -106,6 +107,14 @@ internal object RetrofitUtils {
     /**设置BaseURL**/
     fun setBaseUrl(url: String) {
         baseUrl = url
+    }
+
+    fun addHeader(key: String, value: String) {
+        interceptor.addHeader(key, value)
+    }
+
+    fun removeHeader(key: String) {
+        interceptor.removeHeader(key)
     }
 
     /**

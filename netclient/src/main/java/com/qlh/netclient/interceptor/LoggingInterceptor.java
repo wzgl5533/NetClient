@@ -8,6 +8,10 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by QLH on 2018/4/20.
@@ -18,10 +22,23 @@ public class LoggingInterceptor implements Interceptor {
 
     private static final String TAG = "OKHttp----";
     public static Boolean isDebug = true;
+    private Map<String, String> headerMap = new HashMap<>();
     @Override
     public Response intercept(Interceptor.Chain chain) throws IOException {
         //这个chain里面包含了request和response，所以你要什么都可以从这里拿
         Request request = chain.request();
+        if (!headerMap.isEmpty()) {
+            Set<String> stringSet = headerMap.keySet();
+            Iterator<String> iterator = stringSet.iterator();
+            String keyTemp;
+
+            Request.Builder builder = request.newBuilder();
+            while (iterator.hasNext()) {
+                keyTemp = iterator.next();
+                builder.addHeader(keyTemp, headerMap.get(keyTemp));
+            }
+            request = builder.build();
+        }
 
         long t1 = System.nanoTime();//请求发起的时间
 
@@ -48,5 +65,22 @@ public class LoggingInterceptor implements Interceptor {
         }
 
         return response;
+    }
+
+    /**
+     * 所有请求的公共header
+     * @param name
+     * @param value
+     */
+    public void addHeader(String name, String value) {
+        headerMap.put(name, value);
+    }
+
+    /**
+     * 移除一个http header
+     * @param name
+     */
+    public void removeHeader(String name) {
+        headerMap.remove(name);
     }
 }

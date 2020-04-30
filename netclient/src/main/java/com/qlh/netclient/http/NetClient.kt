@@ -57,4 +57,17 @@ object NetClient {
     fun setBaseUrl(baseUrl: String) {
         RetrofitUtils.setBaseUrl(baseUrl)
     }
+
+    /**设置header**/
+    @JvmStatic
+    fun addHeader(key:String,value:String):NetClient{
+        RetrofitUtils.addHeader(key,value)
+        return this
+    }
+
+    /**设置BaseUrl**/
+    @JvmStatic
+    fun removeHeader(key: String){
+        RetrofitUtils.removeHeader(key)
+    }
 }
