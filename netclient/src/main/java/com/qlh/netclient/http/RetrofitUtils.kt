@@ -28,8 +28,6 @@ internal object RetrofitUtils {
 
     private var baseUrl: String = ""
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create()
-    private val okHttpClient = getOkHttpClientBuilder()
-    private val interceptor = LoggingInterceptor()
 
     private fun getOkHttpClientBuilder(): OkHttpClient.Builder {
         //需要权限
@@ -56,17 +54,6 @@ internal object RetrofitUtils {
     }
 
     /**
-     * 设置默认的GsonConverterFactory，不过滤数据，T泛型传入BaseBean解析，需要自己处理数据异常等逻辑
-     */
-    private fun getRetrofitBuilder(baseUrl: String): Retrofit.Builder {
-        return Retrofit.Builder()
-            .client(okHttpClient.build())
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .baseUrl(baseUrl)
-    }
-
-    /**
      * @param baseUrl                  基础地址
      * @param isDefineConverterFactory 是否需要自定义转换器
      *
@@ -76,8 +63,13 @@ internal object RetrofitUtils {
      *
      * false:不过滤，T泛型传入BaseBean解析，需要自己处理数据异常等逻辑
      */
-    fun getRetrofitBuilder(baseUrl: String, isDefineConverterFactory: Boolean): Retrofit.Builder {
+    fun getRetrofitBuilder(baseUrl: String, isDefineConverterFactory: Boolean,map:HashMap<String,String>?): Retrofit.Builder {
         setBaseUrl(baseUrl)
+        val okHttpClient = getOkHttpClientBuilder()
+        val interceptor = LoggingInterceptor()
+        map?.forEach {
+            interceptor.addHeader(it.key,it.value)
+        }
         okHttpClient.addInterceptor(interceptor)
         return if (isDefineConverterFactory)
             Retrofit.Builder()
@@ -86,7 +78,11 @@ internal object RetrofitUtils {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(baseUrl)
         else
-            getRetrofitBuilder(baseUrl)
+            Retrofit.Builder()
+                .client(okHttpClient.build())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(baseUrl)
     }
 
     /**
@@ -98,8 +94,8 @@ internal object RetrofitUtils {
      *
      * false:不过滤，T泛型传入BaseBean解析，需要自己处理数据异常等逻辑
      */
-    fun getRetrofitBuilder(isDefineConverterFactory: Boolean): Retrofit.Builder {
-        return getRetrofitBuilder(baseUrl, isDefineConverterFactory)
+    fun getRetrofitBuilder(isDefineConverterFactory: Boolean,map: HashMap<String, String>?): Retrofit.Builder {
+        return getRetrofitBuilder(baseUrl, isDefineConverterFactory,map)
 
     }
 
@@ -107,14 +103,6 @@ internal object RetrofitUtils {
     /**设置BaseURL**/
     fun setBaseUrl(url: String) {
         baseUrl = url
-    }
-
-    fun addHeader(key: String, value: String) {
-        interceptor.addHeader(key, value)
-    }
-
-    fun removeHeader(key: String) {
-        interceptor.removeHeader(key)
     }
 
     /**

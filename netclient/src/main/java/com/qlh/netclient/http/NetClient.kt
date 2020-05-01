@@ -22,18 +22,25 @@ object NetClient {
      * @param baseUrl                  基础地址
      * @param isDefineConverterFactory 是否需要自定义转换器
      **/
-    fun getRetrofit(baseUrl: String, isDefineConverterFactory: Boolean = false): Retrofit {
+    fun getRetrofit(
+        baseUrl: String,
+        isDefineConverterFactory: Boolean = false,
+        headerMap: HashMap<String, String>? = null
+    ): Retrofit {
 
-        return RetrofitUtils.getRetrofitBuilder(baseUrl, isDefineConverterFactory).build()
+        return RetrofitUtils.getRetrofitBuilder(baseUrl, isDefineConverterFactory, headerMap).build()
     }
 
     /**application中初始化定义baseUrl**/
-    fun getRetrofit(isDefineConverterFactory: Boolean = false): Retrofit? {
+    fun getRetrofit(
+        isDefineConverterFactory: Boolean = false,
+        headerMap: HashMap<String, String>? = null
+    ): Retrofit? {
 
         return if (RetrofitUtils.isSetBaseUrl()) {
-            RetrofitUtils.getRetrofitBuilder(isDefineConverterFactory).build()
+            RetrofitUtils.getRetrofitBuilder(isDefineConverterFactory,headerMap).build()
         } else {
-            Logs.e(NetClient.javaClass.simpleName,"需要设置基础地址")
+            Logs.e(NetClient.javaClass.simpleName, "需要设置基础地址")
             null
         }
     }
@@ -56,18 +63,5 @@ object NetClient {
     @JvmStatic
     fun setBaseUrl(baseUrl: String) {
         RetrofitUtils.setBaseUrl(baseUrl)
-    }
-
-    /**设置header**/
-    @JvmStatic
-    fun addHeader(key:String,value:String):NetClient{
-        RetrofitUtils.addHeader(key,value)
-        return this
-    }
-
-    /**设置BaseUrl**/
-    @JvmStatic
-    fun removeHeader(key: String){
-        RetrofitUtils.removeHeader(key)
     }
 }

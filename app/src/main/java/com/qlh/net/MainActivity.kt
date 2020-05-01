@@ -33,7 +33,39 @@ class MainActivity : AppCompatActivity() {
 //            })
 
         //测试
-        NetClient.getRetrofit()?.let {
+        val m3 = HashMap<String,String>().apply {
+            this["Content-Type"] = "application/x-www-form-urlencoded"
+            this["Content-Type1"] = "application/x-www-form-urlencoded"
+        }
+        NetClient.getRetrofit(headerMap = m3)?.let {
+            it.create(IService::class.java).getList("420","1")
+                .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
+                .switch()
+                .subscribe(object :NetworkObserver<Any>(){
+                    override fun onSuccess(t: Any?) {
+
+                    }
+
+                })
+        }
+
+        //测试
+        NetClient
+            .getRetrofit()?.let {
+            it.create(IService::class.java).getList("420","1")
+                .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
+                .switch()
+                .subscribe(object :NetworkObserver<Any>(){
+                    override fun onSuccess(t: Any?) {
+
+                    }
+
+                })
+        }
+
+        //测试
+        NetClient
+            .getRetrofit()?.let {
             it.create(IService::class.java).getList("420","1")
                 .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
                 .switch()

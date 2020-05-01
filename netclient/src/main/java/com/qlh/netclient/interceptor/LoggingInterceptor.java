@@ -1,17 +1,17 @@
 package com.qlh.netclient.interceptor;
 
-import com.qlh.netclient.BuildConfig;
 import com.qlh.netclient.utils.Logs;
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Created by QLH on 2018/4/20.
@@ -68,19 +68,11 @@ public class LoggingInterceptor implements Interceptor {
     }
 
     /**
-     * 所有请求的公共header
+     * 添加header
      * @param name
      * @param value
      */
     public void addHeader(String name, String value) {
         headerMap.put(name, value);
-    }
-
-    /**
-     * 移除一个http header
-     * @param name
-     */
-    public void removeHeader(String name) {
-        headerMap.remove(name);
     }
 }
