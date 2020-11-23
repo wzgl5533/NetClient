@@ -1,7 +1,7 @@
 package com.qlh.app
 
 import android.app.Application
-import com.qlh.netclient.http.NetClient
+import com.qlh.netclient.http.NetClientUtil
 
 /**
  * 作者：QLH on 2018-12-01
@@ -11,7 +11,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        NetClient.init(this)
+        NetClientUtil.init(this)
             .logToggle(true)
             .setBaseUrl("https://www.wanandroid.com/")
     }

@@ -4,13 +4,14 @@ import android.content.Context
 import com.qlh.netclient.interceptor.LoggingInterceptor
 import com.qlh.netclient.utils.Logs
 import com.qlh.netclient.utils.Utils
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
 /**
  *作者：QLH on 2018-12-01
  *描述：管理Retrofit
  */
-object NetClient {
+object NetClientUtil {
 
     /**
      *isDefineConverterFactory
@@ -40,21 +41,21 @@ object NetClient {
         return if (RetrofitUtils.isSetBaseUrl()) {
             RetrofitUtils.getRetrofitBuilder(isDefineConverterFactory,headerMap).build()
         } else {
-            Logs.e(NetClient.javaClass.simpleName, "需要设置基础地址")
+            Logs.e(NetClientUtil.javaClass.simpleName, "需要设置基础地址")
             null
         }
     }
 
     /**初始化**/
     @JvmStatic
-    fun init(context: Context): NetClient {
+    fun init(context: Context): NetClientUtil {
         Utils.init(context)
         return this
     }
 
     /**设置Log开关**/
     @JvmStatic
-    fun logToggle(isDebug: Boolean): NetClient {
+    fun logToggle(isDebug: Boolean): NetClientUtil {
         LoggingInterceptor.isDebug = isDebug
         return this
     }
@@ -64,4 +65,7 @@ object NetClient {
     fun setBaseUrl(baseUrl: String) {
         RetrofitUtils.setBaseUrl(baseUrl)
     }
+
+    @JvmStatic
+    fun setOkHttpBuilder(builder:OkHttpClient.Builder) = RetrofitUtils.setOkHttpBuilder(builder)
 }

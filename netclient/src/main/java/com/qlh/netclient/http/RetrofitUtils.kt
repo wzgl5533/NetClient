@@ -28,6 +28,7 @@ internal object RetrofitUtils {
 
     private var baseUrl: String = ""
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").serializeNulls().create()
+    private var builder: OkHttpClient.Builder? = null
 
     private fun getOkHttpClientBuilder(): OkHttpClient.Builder {
         //需要权限
@@ -63,12 +64,16 @@ internal object RetrofitUtils {
      *
      * false:不过滤，T泛型传入BaseBean解析，需要自己处理数据异常等逻辑
      */
-    fun getRetrofitBuilder(baseUrl: String, isDefineConverterFactory: Boolean,map:HashMap<String,String>?): Retrofit.Builder {
+    fun getRetrofitBuilder(
+        baseUrl: String,
+        isDefineConverterFactory: Boolean,
+        map: HashMap<String, String>?
+    ): Retrofit.Builder {
         setBaseUrl(baseUrl)
-        val okHttpClient = getOkHttpClientBuilder()
+        val okHttpClient = builder?:getOkHttpClientBuilder()
         val interceptor = LoggingInterceptor()
         map?.forEach {
-            interceptor.addHeader(it.key,it.value)
+            interceptor.addHeader(it.key, it.value)
         }
         okHttpClient.addInterceptor(interceptor)
         return if (isDefineConverterFactory)
@@ -94,8 +99,11 @@ internal object RetrofitUtils {
      *
      * false:不过滤，T泛型传入BaseBean解析，需要自己处理数据异常等逻辑
      */
-    fun getRetrofitBuilder(isDefineConverterFactory: Boolean,map: HashMap<String, String>?): Retrofit.Builder {
-        return getRetrofitBuilder(baseUrl, isDefineConverterFactory,map)
+    fun getRetrofitBuilder(
+        isDefineConverterFactory: Boolean,
+        map: HashMap<String, String>?
+    ): Retrofit.Builder {
+        return getRetrofitBuilder(baseUrl, isDefineConverterFactory, map)
 
     }
 
@@ -103,6 +111,10 @@ internal object RetrofitUtils {
     /**设置BaseURL**/
     fun setBaseUrl(url: String) {
         baseUrl = url
+    }
+
+    fun setOkHttpBuilder(builder: OkHttpClient.Builder){
+        this.builder = builder
     }
 
     /**

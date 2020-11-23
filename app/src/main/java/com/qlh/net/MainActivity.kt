@@ -3,8 +3,7 @@ package com.qlh.net
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.qlh.netclient.http.NetworkObserver
-import com.qlh.netclient.http.NetClient
-import com.qlh.netclient.utils.Logs
+import com.qlh.netclient.http.NetClientUtil
 import com.qlh.netclient.utils.ProgressUtils
 import com.qlh.netclient.utils.switch
 
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             this["Content-Type"] = "application/x-www-form-urlencoded"
             this["Content-Type1"] = "application/x-www-form-urlencoded"
         }
-        NetClient.getRetrofit(headerMap = m3)?.let {
+        NetClientUtil.getRetrofit(headerMap = m3)?.let {
             it.create(IService::class.java).getList("420","1")
                 .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
                 .switch()
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //测试
-        NetClient
+        NetClientUtil
             .getRetrofit()?.let {
             it.create(IService::class.java).getList("420","1")
                 .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
@@ -64,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //测试
-        NetClient
+        NetClientUtil
             .getRetrofit()?.let {
             it.create(IService::class.java).getList("420","1")
                 .compose(ProgressUtils.applyProgressBar(this,"zhenzgai.."))
